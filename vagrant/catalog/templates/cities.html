@@ -1,0 +1,7 @@
+{% extends "main.html" %}
+{% block content %}
+<a href="{{url_for('newCity')}}">Add City</a>
+	{% for city in cities %}
+        <h3>{{city.name}}</h3>
+	{% endfor %}
+{% endblock %}

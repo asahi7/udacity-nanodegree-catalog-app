@@ -1,79 +1,89 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, ForeignKey, Integer, String, Text, Boolean, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///catalogdb'
-db = SQLAlchemy(app)
+from sqlalchemy.orm import relationship
 
 
-class City(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    country = db.Column(db.String(120), nullable=False)
-    restaurants = db.relationship('Restaurant', backref='city', lazy=True)
+Base = declarative_base()
+
+
+class City(Base):
+    __tablename__ = 'city'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120), nullable=False)
+    country = Column(String(120), nullable=False)
+    restaurants = relationship('Restaurant', backref='city', lazy=True)
 
     def __repr__(self):
         return '<City %r at %r>' % (self.name, self.country)
 
 
-class Restaurant(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    city_id = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=False)
-    complaints = db.relationship('Complaint', backref='restaurant', lazy=True)
-    recommendations = db.relationship(
+class Restaurant(Base):
+    __tablename__ = 'restaurant'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
+    complaints = relationship('Complaint', backref='restaurant', lazy=True)
+    recommendations = relationship(
         'Recommendation', backref='restaurant', lazy=True)
 
     def __repr__(self):
         return '<Restaurant %r>' % (self.name)
 
 
-class Complaint(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    rate = db.Column(db.Integer, nullable=False)
-    restaraunt_id = db.Column(
-        db.Integer,
-        db.ForeignKey('restaurant.id'),
+class Complaint(Base):
+    __tablename__ = 'complaint'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    rate = Column(Integer, nullable=False)
+    restaraunt_id = Column(
+        Integer,
+        ForeignKey('restaurant.id'),
         nullable=False)
-    posted_date = db.Column(
-        db.DateTime,
+    posted_date = Column(
+        DateTime,
         nullable=False,
         default=datetime.utcnow)
-    posted_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    posted_by = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return '<Complaints %r with rate %d>' % (self.name, self.rate)
 
 
-class Recommendation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    restaraunt_id = db.Column(
-        db.Integer,
-        db.ForeignKey('restaurant.id'),
+class Recommendation(Base):
+    __tablename__ = 'recommendation'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120), nullable=False)
+    description = Column(Text, nullable=False)
+    restaraunt_id = Column(
+        Integer,
+        ForeignKey('restaurant.id'),
         nullable=False)
-    posted_date = db.Column(
-        db.DateTime,
+    posted_date = Column(
+        DateTime,
         nullable=False,
         default=datetime.utcnow)
-    posted_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    posted_by = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return '<Recommendation %r>' % (self.name)
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    is_admin = db.Column(db.Boolean, nullable=False)
-    complaints = db.relationship('Complaint', backref='user', lazy=True)
-    recommendations = db.relationship(
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(120), nullable=False)
+    email = Column(String(120), nullable=False)
+    is_admin = Column(Boolean, nullable=False)
+    complaints = relationship('Complaint', backref='user', lazy=True)
+    recommendations = relationship(
         'Recommendation', backref='user', lazy=True)
 
     def __repr__(self):
