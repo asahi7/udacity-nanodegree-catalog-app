@@ -37,6 +37,7 @@ Vagrant.configure("2") do |config|
     su vagrant -c 'createdb'
     su vagrant -c 'createdb news'
     su vagrant -c 'createdb forum'
+    su vagrant -c 'createdb catalogdb'
     su vagrant -c 'psql forum -f /vagrant/forum/forum.sql'
 
     vagrantTip="[35m[1mThe shared directory is located at /vagrant\\nTo access your shared files: cd /vagrant[m"
