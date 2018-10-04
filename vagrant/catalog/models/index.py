@@ -41,7 +41,7 @@ class Complaint(Base):
     name = Column(String(120), nullable=False)
     description = Column(Text, nullable=False)
     rate = Column(Integer, nullable=False)
-    restaraunt_id = Column(
+    restaurant_id = Column(
         Integer,
         ForeignKey('restaurant.id'),
         nullable=False)
@@ -61,7 +61,7 @@ class Recommendation(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
     description = Column(Text, nullable=False)
-    restaraunt_id = Column(
+    restaurant_id = Column(
         Integer,
         ForeignKey('restaurant.id'),
         nullable=False)

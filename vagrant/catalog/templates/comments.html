@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block content %}
+<a href="{{url_for('newComment', city_id=city_id)}}">Add Complaint/Recommendation</a>
+<h2>Complaints</h2>
+	{% for complaint in comments['complaints'] %}
+        <h3>{{complaint.name}} - {{complaint.id}}</h3>
+        <textarea>
+            {{complaint.description}}
+        </textarea>
+	{% endfor %}
+<h2>Recommendations</h2>
+	{% for recommendation in comments['recommendations'] %}
+        <h3>{{recommendation.name}} - {{recommendation.id}}</h3>
+        <textarea>
+            {{recommendation.description}}
+        </textarea>
+	{% endfor %}
+{% endblock %}

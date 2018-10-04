@@ -1,7 +1,8 @@
-from flask import Flask, request, session, redirect, flash, url_for, render_template
-from models.index import City, Base, Restaurant, User
+from flask import Flask, request, session, redirect, flash, url_for, render_template, abort
+from models.index import City, Base, Restaurant, User, Complaint, Recommendation
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import asc, create_engine
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
@@ -73,6 +74,53 @@ def newUser():
 def showUsers():
     users = session.query(User)
     return render_template('users.html', users=users)
+
+
+@app.route("/restaurant/<int:restaurant_id>/comment/new/",
+           methods=["GET", "POST"])
+def newComment(restaurant_id):
+    if request.method == "POST":
+        if request.form["type"] == "complaint":
+            complaint = Complaint(name=request.form["name"],
+                                  description=request.form["description"],
+                                  rate=int(request.form["rate"]),
+                                  restaurant_id=restaurant_id,
+                                  posted_by=1  # TODO: change when auth is added
+                                  )
+            session.add(complaint)
+            flash(
+                'New complaint `%s` in restaurant with id: %d was created' %
+                (complaint.name, restaurant_id))
+        elif request.form["type"] == "recommendation":
+            recommendation = Recommendation(name=request.form["name"],
+                                            description=request.form["description"],
+                                            restaurant_id=restaurant_id,
+                                            posted_by=1  # TODO: change when auth is added
+                                            )
+            session.add(recommendation)
+            flash(
+                'New recommendation `%s` in restaurant with id: %d was created' %
+                (recommendation.name, restaurant_id))
+        else:
+            return abort(400)
+        session.commit()
+        return redirect(url_for('showComments', restaurant_id=restaurant_id))
+    else:
+        return render_template('newComment.html')
+
+
+@app.route('/restaurant/<int:restaurant_id>/comment/all/')
+def showComments(restaurant_id):
+    complaints = session.query(Complaint).filter_by(
+        restaurant_id=restaurant_id)
+    recommendations = session.query(Recommendation).filter_by(
+        restaurant_id=restaurant_id)
+    comments = {
+        "complaints": complaints,
+        "recommendations": recommendations
+    }
+    return render_template(
+        'comments.html', comments=comments, restaurant_id=restaurant_id)
 
 
 if __name__ == '__main__':
