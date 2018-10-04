@@ -2,7 +2,6 @@ from flask import Flask, request, session, redirect, flash, url_for, render_temp
 from models.index import City, Base, Restaurant, User, Complaint, Recommendation
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import asc, create_engine
-from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)

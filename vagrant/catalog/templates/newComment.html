@@ -3,8 +3,14 @@
     <form action="#" method = "POST">
         <label for="name">Name:</label>
         <input type ="text" maxlength="120" name="name" />
+        <br>
         <label for="description">Description:</label>
         <textarea name="description"></textarea>
+        <br>
+        <label for="type">Type of comment:</label>
+        Recommendation<input type="radio" value="recommendation" name="type" checked>
+        Complaint<input type="radio" value="complaint" name="type">
+        <br>
         <label for="rate">Works only if it is a complaint:</label>
         <select name="rate">
             <option value="1">1</option>
@@ -13,6 +19,7 @@
             <option value="4">4</option>
             <option value="5">5</option>
         </select>
+        <br>
         <button type="submit" value="submit"></button>
     </form>
 {% endblock %}
