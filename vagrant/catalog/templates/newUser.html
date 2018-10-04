@@ -1,0 +1,14 @@
+{% extends "main.html" %}
+{% block content %}
+    <form action="#" method = "POST">
+        <label for="name">Name:</label>
+        <input type ="text" maxlength="120" name="name" />
+        <label for="email">Email:</label>
+        <input type ="text" maxlength="120" name="email" />
+        <ul>
+            <li>Admin: <input type="radio" name="is_admin" value="true"></li>
+            <li>Ordinary user: <input type="radio" name="is_admin" value="false"></li>
+        </ul>
+        <button type="submit" value="submit"></button>
+    </form>
+{% endblock %}

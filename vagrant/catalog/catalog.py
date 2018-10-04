@@ -1,5 +1,5 @@
 from flask import Flask, request, session, redirect, flash, url_for, render_template
-from models.index import City, Base, Restaurant
+from models.index import City, Base, Restaurant, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import asc, create_engine
 
@@ -51,6 +51,28 @@ def showRestaurants(city_id):
         city_id=city_id).order_by(asc(Restaurant.name))
     return render_template(
         'restaurants.html', restaurants=restaurants, city_id=city_id)
+
+
+@app.route("/user/new/", methods=["GET", "POST"])
+def newUser():
+    if request.method == "POST":
+        is_admin = True if request.form["is_admin"] == "true" else False
+        user = User(
+            name=request.form["name"],
+            email=request.form["email"],
+            is_admin=is_admin)
+        session.add(user)
+        flash('New user `%s` was created' % user.name)
+        session.commit()
+        return redirect(url_for('showUsers'))
+    else:
+        return render_template('newUser.html')
+
+
+@app.route('/user/all/')
+def showUsers():
+    users = session.query(User)
+    return render_template('users.html', users=users)
 
 
 if __name__ == '__main__':
