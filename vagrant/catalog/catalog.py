@@ -109,7 +109,8 @@ def newComment(restaurant_id):
         session.commit()
         return redirect(url_for('showComments', restaurant_id=restaurant_id))
     else:
-        return render_template('newComment.html')
+        restaurant = session.query(Restaurant).get(restaurant_id)
+        return render_template('newComment.html', restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/comment/all/')
