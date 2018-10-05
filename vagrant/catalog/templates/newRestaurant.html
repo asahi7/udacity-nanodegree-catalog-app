@@ -1,10 +1,15 @@
 {% extends "main.html" %}
 {% block content %}
-    <form action="#" method = "POST">
-        <label for="name">Name:</label>
-        <input type ="text" maxlength="120" name="name" />
-        <label for="description">Description:</label>
-        <textarea name="description"></textarea>
-        <button type="submit" value="submit"></button>
-    </form>
+<h2>Adding a new restaurant</h2>
+<form action="#" method = "POST">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" maxlength="120" id="name" placeholder="Enter a restaurant's name">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 {% endblock %}
