@@ -47,8 +47,11 @@ def newRestaurant(city_id):
 
 @app.route('/city/<int:city_id>/restaurant/all/')
 def showRestaurants(city_id):
-    restaurants = session.query(Restaurant).filter_by(
-        city_id=city_id).order_by(asc(Restaurant.name))
+    if city_id == 0:
+        restaurants = session.query(Restaurant).all()
+    else:
+        restaurants = session.query(Restaurant).filter_by(
+            city_id=city_id).order_by(asc(Restaurant.name))
     return render_template(
         'restaurants.html', restaurants=restaurants, city_id=city_id)
 
@@ -110,10 +113,14 @@ def newComment(restaurant_id):
 
 @app.route('/restaurant/<int:restaurant_id>/comment/all/')
 def showComments(restaurant_id):
-    complaints = session.query(Complaint).filter_by(
-        restaurant_id=restaurant_id)
-    recommendations = session.query(Recommendation).filter_by(
-        restaurant_id=restaurant_id)
+    if restaurant_id == 0:
+        complaints = session.query(Complaint).all()
+        recommendations = session.query(Recommendation).all()
+    else:
+        complaints = session.query(Complaint).filter_by(
+            restaurant_id=restaurant_id)
+        recommendations = session.query(Recommendation).filter_by(
+            restaurant_id=restaurant_id)
     comments = {
         "complaints": complaints,
         "recommendations": recommendations

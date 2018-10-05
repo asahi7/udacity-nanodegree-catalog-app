@@ -1,6 +1,8 @@
 {% extends "main.html" %}
 {% block content %}
-<a href="{{url_for('newComment', restaurant_id=restaurant_id)}}">Add Complaint/Recommendation</a>
+{% if restaurant_id != 0 %}
+    <a href="{{url_for('newComment', restaurant_id=restaurant_id)}}">Add Complaint/Recommendation</a>
+{% endif %}
 <h2>Complaints</h2>
 	{% for complaint in comments['complaints'] %}
         <h3>{{complaint.name}} - {{complaint.id}}</h3>
