@@ -42,7 +42,8 @@ def newRestaurant(city_id):
         session.commit()
         return redirect(url_for('showRestaurants', city_id=city_id))
     else:
-        return render_template('newRestaurant.html')
+        city = session.query(City).get(city_id)
+        return render_template('newRestaurant.html', city=city)
 
 
 @app.route('/city/<int:city_id>/restaurant/all/')

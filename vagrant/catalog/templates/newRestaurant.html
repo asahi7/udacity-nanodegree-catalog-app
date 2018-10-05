@@ -1,6 +1,6 @@
 {% extends "main.html" %}
 {% block content %}
-<h2>Adding a new restaurant</h2>
+<h2>Adding a new restaurant in <a href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a></h2>
 <form action="#" method = "POST">
     <div class="form-group">
         <label for="name">Name</label>
