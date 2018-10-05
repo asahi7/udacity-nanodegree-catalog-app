@@ -1,10 +1,15 @@
 {% extends "main.html" %}
 {% block content %}
-    <form action="#" method = "POST">
-        <label for="name">City:</label>
-        <input type ="text" maxlength="120" name="city" />
+<h2>Adding a new city</h2>
+<form action="#" method = "POST">
+    <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" class="form-control" name="city" maxlength="120" id="city" placeholder="Enter city">
+    </div>
+    <div class="form-group">
         <label for="country">Country:</label>
-        <input type ="text" maxlength="120" name="country" />
-        <button type="submit" value="submit"></button>
-    </form>
+        <input type="text" class="form-control" name="country" maxlength="120" id="country" placeholder="Enter country">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 {% endblock %}
