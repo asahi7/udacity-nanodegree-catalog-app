@@ -1,20 +1,27 @@
 {% extends "main.html" %}
 {% block content %}
-{% if restaurant_id != 0 %}
-    <a href="{{url_for('newComment', restaurant_id=restaurant_id)}}">Add Complaint/Recommendation</a>
+{% if restaurant != None and restaurant.id != 0 %}
+	<h2>Comments in a restaurant - {{restaurant.name}}</h2>
+	<a href="{{url_for('newComment', restaurant_id=restaurant.id)}}">Add a comment</a>
+{% elif restaurant == None %}
+	<h2>All comments</h2>
 {% endif %}
-<h2>Complaints</h2>
-	{% for complaint in comments['complaints'] %}
-        <h3>{{complaint.name}} - {{complaint.id}}</h3>
-        <textarea>
-            {{complaint.description}}
-        </textarea>
+<h4>Complaints</h4>
+<ul>
+    {% for complaint in comments['complaints'] %}
+    <li>{{complaint.name}} - {{complaint.rate}}</li>
+    <textarea>
+        {{complaint.description}}
+    </textarea>
 	{% endfor %}
-<h2>Recommendations</h2>
-	{% for recommendation in comments['recommendations'] %}
-        <h3>{{recommendation.name}} - {{recommendation.id}}</h3>
-        <textarea>
-            {{recommendation.description}}
-        </textarea>
+</ul>
+<h4>Recommendations</h4>
+<ul>
+    {% for recommendation in comments['recommendations'] %}
+    <li>{{recommendation.name}}</li>
+    <textarea>
+        {{recommendation.description}}
+    </textarea>
 	{% endfor %}
+</ul>
 {% endblock %}

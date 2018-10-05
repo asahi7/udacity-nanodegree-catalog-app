@@ -1,7 +1,10 @@
 {% extends "main.html" %}
 {% block content %}
-<a href="{{url_for('newCity')}}">Add City</a>
+<h2>All cities</h2>
+<a href="{{url_for('newCity')}}">Add a city</a>
+<ul>
 	{% for city in cities %}
-        <h3>{{city.name}} - {{city.id}}</h3>
+	<li>View restaurants in <a href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a></li>
 	{% endfor %}
+</ul>
 {% endblock %}

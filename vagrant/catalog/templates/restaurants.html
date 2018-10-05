@@ -1,9 +1,14 @@
 {% extends "main.html" %}
 {% block content %}
-{% if city_id != 0 %}
-	<a href="{{url_for('newRestaurant', city_id=city_id)}}">Add Restaurant</a>
+{% if city != None and city.id != 0 %}
+<h2>Restaurants in a city - {{city.name}}</h2>
+	<a href="{{url_for('newRestaurant', city_id=city.id)}}">Add Restaurant</a>
+{% elif city == None %}
+	<h2>All restaurants</h2>
 {% endif %}
+<ul>
 	{% for restaurant in restaurants %}
-        <h3>{{restaurant.name}} - {{restaurant.id}}</h3>
+	<li>View comments in <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a></li>
 	{% endfor %}
+</ul>
 {% endblock %}
