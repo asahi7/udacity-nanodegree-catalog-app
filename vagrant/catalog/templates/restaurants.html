@@ -2,13 +2,15 @@
 {% block content %}
 {% if city != None and city.id != 0 %}
 <h2>Restaurants in a city - {{city.name}}</h2>
-	<a href="{{url_for('newRestaurant', city_id=city.id)}}">Add Restaurant</a>
+	<a href="{{url_for('newRestaurant', city_id=city.id)}}">Add a restaurant</a>
 {% elif city == None %}
 	<h2>All restaurants</h2>
 {% endif %}
-<ul>
+<ul class="list-group list-group-flush">
 	{% for restaurant in restaurants %}
-	<li>View comments in <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a></li>
+		<li class="list-group-item">
+			View comments in <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a>
+		</li>
 	{% endfor %}
 </ul>
 {% endblock %}

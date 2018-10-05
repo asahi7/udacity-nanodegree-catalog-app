@@ -2,9 +2,11 @@
 {% block content %}
 <h2>All cities</h2>
 <a href="{{url_for('newCity')}}">Add a city</a>
-<ul>
+<ul class="list-group list-group-flush">
 	{% for city in cities %}
-	<li>View restaurants in <a href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a></li>
+		<li class="list-group-item">
+			View restaurants in <a href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a>
+		</li>
 	{% endfor %}
 </ul>
 {% endblock %}
