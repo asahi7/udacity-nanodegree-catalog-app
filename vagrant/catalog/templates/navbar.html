@@ -1,0 +1,19 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('showCities')}}">Cities</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('showRestaurants', city_id=-1)}}">Restaurants</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('showComments', restaurant_id=-1)}}">Comments</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('showUsers')}}">Users</a>
+      </li>
+    </ul>
+  </div>
+</nav>
