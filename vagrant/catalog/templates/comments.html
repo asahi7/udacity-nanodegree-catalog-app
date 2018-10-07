@@ -7,21 +7,24 @@
 	<h2>All comments</h2>
 {% endif %}
 <h4>Complaints</h4>
-<ul>
-    {% for complaint in comments['complaints'] %}
-    <li>{{complaint.name}} - {{complaint.rate}}</li>
-    <textarea>
-        {{complaint.description}}
-    </textarea>
-	{% endfor %}
-</ul>
+{% for complaint in comments['complaints'] %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{complaint.name}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Stars: {{complaint.rate}}</h6>
+        <p class="card-text">{{complaint.description}}</p>
+        <a href="#" class="card-link">by user {{complaint.posted_by}}</a>
+      </div>
+    </div>
+{% endfor %}
 <h4>Recommendations</h4>
-<ul>
-    {% for recommendation in comments['recommendations'] %}
-    <li>{{recommendation.name}}</li>
-    <textarea>
-        {{recommendation.description}}
-    </textarea>
-	{% endfor %}
-</ul>
+{% for recommendation in comments['recommendations'] %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{recommendation.name}}</h5>
+        <p class="card-text">{{recommendation.description}}</p>
+        <a href="#" class="card-link">by user {{recommendation.posted_by}}</a>
+      </div>
+    </div>
+{% endfor %}
 {% endblock %}
