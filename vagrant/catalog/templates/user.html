@@ -1,0 +1,8 @@
+{% extends "main.html" %}
+{% block content %}
+<h2>User {{user.name}}</h2>
+<ul>
+    <li>id: {{user.id}}</li>
+    <li>{{"Admin" if user.is_admin == True}}</li>
+</ul>
+{% endblock %}

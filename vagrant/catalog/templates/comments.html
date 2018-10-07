@@ -13,7 +13,7 @@
         <h5 class="card-title">{{complaint.name}}</h5>
         <h6 class="card-subtitle mb-2 text-muted">Stars: {{complaint.rate}}</h6>
         <p class="card-text">{{complaint.description}}</p>
-        <a href="#" class="card-link">by user {{complaint.posted_by}}</a>
+        <a href="{{url_for('showUser', user_id=complaint.user.id)}}" class="card-link">by {{complaint.user.name}}</a>
       </div>
     </div>
 {% endfor %}
@@ -23,7 +23,7 @@
       <div class="card-body">
         <h5 class="card-title">{{recommendation.name}}</h5>
         <p class="card-text">{{recommendation.description}}</p>
-        <a href="#" class="card-link">by user {{recommendation.posted_by}}</a>
+        <a href="{{url_for('showUser', user_id=recommendation.user.id)}}" class="card-link">by {{recommendation.user.name}}</a>
       </div>
     </div>
 {% endfor %}

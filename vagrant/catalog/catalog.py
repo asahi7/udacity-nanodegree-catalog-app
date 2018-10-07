@@ -3,7 +3,6 @@ from models.index import City, Base, Restaurant, User, Complaint, Recommendation
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import asc, create_engine
 
-
 app = Flask(__name__)
 app.secret_key = "SECRET_KEY"
 engine = create_engine("postgresql:///catalogdb")
@@ -80,6 +79,12 @@ def showUsers():
     return render_template('users.html', users=users)
 
 
+@app.route('/user/<int:user_id>/')
+def showUser(user_id):
+    user = session.query(User).get(user_id)
+    return render_template('user.html', user=user)
+
+
 @app.route("/restaurant/<int:restaurant_id>/comment/new/",
            methods=["GET", "POST"])
 def newComment(restaurant_id):
@@ -89,7 +94,7 @@ def newComment(restaurant_id):
                                   description=request.form["description"],
                                   rate=int(request.form["rate"]),
                                   restaurant_id=restaurant_id,
-                                  posted_by=1  # TODO: change when auth is added
+                                  posted_by=2  # TODO: change when auth is added
                                   )
             session.add(complaint)
             flash(
@@ -99,7 +104,7 @@ def newComment(restaurant_id):
             recommendation = Recommendation(name=request.form["name"],
                                             description=request.form["description"],
                                             restaurant_id=restaurant_id,
-                                            posted_by=1  # TODO: change when auth is added
+                                            posted_by=2  # TODO: change when auth is added
                                             )
             session.add(recommendation)
             flash(
@@ -118,13 +123,15 @@ def newComment(restaurant_id):
 def showComments(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
     if restaurant_id == 0:
-        complaints = session.query(Complaint).all()
-        recommendations = session.query(Recommendation).all()
+        complaints = session.query(Complaint).join(
+            User).filter(User.id == Complaint.posted_by).all()
+        recommendations = session.query(Recommendation).join(
+            User).filter(User.id == Recommendation.posted_by).all()
     else:
-        complaints = session.query(Complaint).filter_by(
-            restaurant_id=restaurant_id)
-        recommendations = session.query(Recommendation).filter_by(
-            restaurant_id=restaurant_id)
+        complaints = session.query(Complaint).join(User).filter(User.id == Complaint.posted_by).filter(
+            Complaint.restaurant_id == restaurant_id).all()
+        recommendations = session.query(Recommendation).join(User).filter(User.id == Recommendation.posted_by).filter(
+            Recommendation.restaurant_id == restaurant_id).all()
     comments = {
         "complaints": complaints,
         "recommendations": recommendations
