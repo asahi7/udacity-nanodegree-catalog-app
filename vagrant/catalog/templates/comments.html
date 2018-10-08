@@ -2,7 +2,9 @@
 {% block content %}
 {% if restaurant != None and restaurant.id != 0 %}
 	<h2>Comments in a restaurant - {{restaurant.name}}</h2>
-	<a href="{{url_for('newComment', restaurant_id=restaurant.id)}}">Add a comment</a>
+    {% if 'admin' in session and session['admin'] == False %}
+        <a href="{{url_for('newComment', restaurant_id=restaurant.id)}}">Add a comment</a>
+    {% endif %}
 {% elif restaurant == None %}
 	<h2>All comments</h2>
 {% endif %}
