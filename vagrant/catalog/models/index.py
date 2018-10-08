@@ -13,7 +13,7 @@ class City(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
     country = Column(String(120), nullable=False)
-    restaurants = relationship('Restaurant', backref='city', lazy=True)
+    restaurants = relationship('Restaurant', backref='city', passive_deletes=True, lazy=True)
 
     def __repr__(self):
         return '<City %r at %r>' % (self.name, self.country)
@@ -25,10 +25,10 @@ class Restaurant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
     description = Column(Text, nullable=False)
-    city_id = Column(Integer, ForeignKey('city.id'), nullable=False)
-    complaints = relationship('Complaint', backref='restaurant', lazy=True)
+    city_id = Column(Integer, ForeignKey('city.id', ondelete='CASCADE'), nullable=False)
+    complaints = relationship('Complaint', backref='restaurant', passive_deletes=True, lazy=True)
     recommendations = relationship(
-        'Recommendation', backref='restaurant', lazy=True)
+        'Recommendation', backref='restaurant', passive_deletes=True, lazy=True)
 
     def __repr__(self):
         return '<Restaurant %r>' % (self.name)
@@ -43,7 +43,7 @@ class Complaint(Base):
     rate = Column(Integer, nullable=False)
     restaurant_id = Column(
         Integer,
-        ForeignKey('restaurant.id'),
+        ForeignKey('restaurant.id', ondelete='CASCADE'),
         nullable=False)
     posted_date = Column(
         DateTime,
@@ -63,7 +63,7 @@ class Recommendation(Base):
     description = Column(Text, nullable=False)
     restaurant_id = Column(
         Integer,
-        ForeignKey('restaurant.id'),
+        ForeignKey('restaurant.id', ondelete='CASCADE'),
         nullable=False)
     posted_date = Column(
         DateTime,

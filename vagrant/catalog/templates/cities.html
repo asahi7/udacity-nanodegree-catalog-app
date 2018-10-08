@@ -8,8 +8,11 @@
     {% for city in cities %}
     <li class="list-group-item">
         View restaurants in <a
-            href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a> ||
-        <a href="{{url_for('changeCity', city_id=city.id)}}">Change</a>
+            href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a>
+        {% if 'admin' in session and session['admin'] == True %}
+            || <a href="{{url_for('changeCity', city_id=city.id)}}">Change</a>
+            || <a href="{{url_for('deleteCity', city_id=city.id)}}">Delete</a>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>

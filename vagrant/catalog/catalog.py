@@ -75,6 +75,7 @@ def saveUserToDB(data, as_admin):
             email=data['email'],
             is_admin=as_admin)
         session.add(user)
+        session.commit()
         flash('New user `%s` was created' % user.name)
     elif user.is_admin != as_admin:
         raise ValueError(
@@ -171,6 +172,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['admin']
+        del login_session['user_id']
         return redirect(url_for('showSignIn'))
     else:
         response = make_response(
@@ -207,6 +209,17 @@ def changeCity(city_id):
         return redirect(url_for('showCities'))
     else:
         return render_template('changeCity.html', city=city)
+
+
+@app.route("/city/<int:city_id>/delete/", methods=["GET"])
+def deleteCity(city_id):
+    if not check_admin_access():
+        return redirect(url_for('showSignIn'))
+    city = session.query(City).get(city_id)
+    if city is not None:
+        session.delete(city)
+        session.commit()
+    return redirect(url_for('showCities'))
 
 
 @app.route('/city/all/')
