@@ -374,6 +374,19 @@ def changeComment(restaurant_id, type, comment_id):
             'changeComment.html', restaurant=restaurant, comment=comment, type=type)
 
 
+@app.route(
+    "/restaurant/<int:restaurant_id>/<string:type>/<int:comment_id>/delete/", methods=["GET"])
+def deleteComment(restaurant_id, type, comment_id):
+    if not check_user_access():
+        return redirect(url_for('showSignIn'))
+    comment = session.query(
+        Complaint if type == 'complaint' else Recommendation).get(comment_id)
+    if comment is not None:
+        session.delete(comment)
+        session.commit()
+    return redirect(url_for('showComments', restaurant_id=restaurant_id))
+
+
 @app.route('/restaurant/<int:restaurant_id>/comment/all/')
 def showComments(restaurant_id):
     if not check_admin_access() and not check_user_access():
