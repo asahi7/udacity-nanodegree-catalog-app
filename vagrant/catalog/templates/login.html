@@ -24,7 +24,7 @@
             $('#signinButton').attr('style', 'display: none');
             $.ajax({
                 type: 'POST',
-                url: '/gconnect/?state={{STATE}}',
+                url: '/gconnect/?state={{STATE}}&as_admin={{as_admin}}',
                 processData: false,
                 data: authResult['code'],
                 contentType: 'application/octet-stream; charset=utf-8',

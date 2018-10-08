@@ -34,8 +34,8 @@ def showSignInUser():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    login_session['admin'] = False
-    return render_template("login.html", STATE=state)
+    loging_as_admin = False
+    return render_template("login.html", STATE=state, as_admin=loging_as_admin)
 
 
 @app.route("/signin/admin")
@@ -43,8 +43,8 @@ def showSignInAdmin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    login_session['admin'] = True
-    return render_template("login.html", STATE=state)
+    loging_as_admin = True
+    return render_template("login.html", STATE=state, as_admin=loging_as_admin)
 
 
 def getUserData(credentials):
@@ -54,9 +54,10 @@ def getUserData(credentials):
     return answer.json()
 
 
-def saveUserToDB(data):
+def saveUserToDB(data, as_admin):
     login_session['username'] = data['name'] if 'name' in data else ''
     login_session['email'] = data['email']
+    login_session['admin'] = as_admin
     if session.query(User).filter_by(email=data['email']).first() is None:
         user = User(
             name=login_session['username'],
@@ -106,7 +107,12 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     data = getUserData(credentials)
-    saveUserToDB(data)
+    print request.args.get('as_admin')
+    if request.args.get('as_admin') == 'True':
+        as_admin = True
+    else:
+        as_admin = False
+    saveUserToDB(data, as_admin)
     if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
@@ -139,10 +145,8 @@ def gdisconnect():
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
-        del login_session['picture']
-        response = make_response(json.dumps('Successfully disconnected.'), 200)
-        response.headers['Content-Type'] = 'application/json'
-        return response
+        del login_session['admin']
+        return redirect(url_for('showSignIn'))
     else:
         response = make_response(
             json.dumps(

@@ -14,6 +14,13 @@
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('showUsers')}}">Users</a>
       </li>
+      <li class="nav-item">
+          {% if 'access_token' in session %}
+            <a class="nav-link" href="{{url_for('gdisconnect')}}">Sign out</a>
+          {% else %}
+            <a class="nav-link" href="{{url_for('showSignIn')}}">Sign in</a>
+          {% endif %}
+      </li>
     </ul>
   </div>
 </nav>
