@@ -437,7 +437,7 @@ def showComments(restaurant_id):
 
 
 @app.route('/restaurant/comment/all/JSON')
-def commentsForRestaurantJSON():
+def commentsJSON():
     if not check_admin_access() and not check_user_access():
         return redirect(url_for("showSignIn"))
     complaints = session.query(Complaint).join(
@@ -446,6 +446,21 @@ def commentsForRestaurantJSON():
     recommendations = session.query(Recommendation).join(
         User).join(Restaurant).filter(Restaurant.id == Recommendation.restaurant_id).filter(
         User.id == Recommendation.posted_by).all()
+    return jsonify(complaints=[c.serialize for c in complaints], recommendations=[
+                   r.serialize for r in recommendations])
+
+
+@app.route('/restaurant/<int:restaurant_id>/comment/all/JSON')
+def commentsForRestaurantJSON(restaurant_id):
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
+    complaints = session.query(Complaint).join(User).join(Restaurant).filter(
+        Restaurant.id == Complaint.restaurant_id).filter(User.id == Complaint.posted_by).filter(
+        Complaint.restaurant_id == restaurant_id).all()
+    recommendations = session.query(Recommendation).join(User).join(Restaurant).filter(
+        Restaurant.id == Recommendation.restaurant_id).filter(
+        User.id == Recommendation.posted_by).filter(
+        Recommendation.restaurant_id == restaurant_id).all()
     return jsonify(complaints=[c.serialize for c in complaints], recommendations=[
                    r.serialize for r in recommendations])
 
