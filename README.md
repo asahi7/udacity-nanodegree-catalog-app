@@ -17,6 +17,8 @@ Currently, there is only one admistrator who can manage the app in order to not 
 
 ## Launch the website
 
+With SSH, in /vagrant/catalog/, run: `python init_db.py`, this will initialize tables in the database
+
 In /vagrant/catalog/, run: `python catalog.py`
 
 Go to [http://localhost:58779/](http://localhost:58779/) and enjoy! You will have to login as either an admin or an ordinary user. The registration allows only one email to be used for one role, in other words, you can not use one email to be used for two roles simultaneously.
