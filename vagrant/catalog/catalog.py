@@ -345,6 +345,35 @@ def newComment(restaurant_id):
         return render_template('newComment.html', restaurant=restaurant)
 
 
+@app.route("/restaurant/<int:restaurant_id>/<string:type>/<int:comment_id>/change/",
+           methods=["GET", "POST"])
+def changeComment(restaurant_id, type, comment_id):
+    if not check_user_access():
+        return redirect(url_for("showSignIn"))
+    if type not in ['complaint', 'recommendation']:
+        return abort(404)
+    if request.method == "POST":
+        if type == "complaint":
+            complaint = session.query(Complaint).get(comment_id)
+            complaint.name = request.form["name"]
+            complaint.rate = request.form["rate"]
+            complaint.description = request.form["description"]
+        elif type == "recommendation":
+            recommendation = session.query(Recommendation).get(comment_id)
+            recommendation.name = request.form["name"]
+            recommendation.description = request.form["description"]
+        else:
+            return abort(400)
+        session.commit()
+        return redirect(url_for('showComments', restaurant_id=restaurant_id))
+    else:
+        restaurant = session.query(Restaurant).get(restaurant_id)
+        comment = session.query(
+            Complaint if type == 'complaint' else Recommendation).get(comment_id)
+        return render_template(
+            'changeComment.html', restaurant=restaurant, comment=comment, type=type)
+
+
 @app.route('/restaurant/<int:restaurant_id>/comment/all/')
 def showComments(restaurant_id):
     if not check_admin_access() and not check_user_access():

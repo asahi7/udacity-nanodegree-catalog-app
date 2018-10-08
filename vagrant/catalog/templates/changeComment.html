@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% block content %}
+<h2>Changing a comment for a <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a></h2>
+<form action="#" method = "POST">
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" name="name" value="{{comment.name}}" maxlength="120" id="name" placeholder="Enter a comment's title">
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3">{{comment.description}}</textarea>
+    </div>
+    {% if type == 'complaint' %}
+        <div class="form-group">
+            <label for="rate">Rate (put only if it is a complaint)</label>
+            <select class="custom-select" required id="rate" name="rate">
+                <option value="1" {{ "selected" if comment.rate==1 }}>1</option>
+                <option value="2" {{ "selected" if comment.rate==2 }}>2</option>
+                <option value="3" {{ "selected" if comment.rate==3 }}>3</option>
+                <option value="4" {{ "selected" if comment.rate==4 }}>4</option>
+                <option value="5" {{ "selected" if comment.rate==5 }}>5</option>
+            </select>
+        </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
