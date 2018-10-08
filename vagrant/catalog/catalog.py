@@ -302,6 +302,14 @@ def showRestaurants(city_id):
         'restaurants.html', restaurants=restaurants, city=city)
 
 
+@app.route('/restaurant/all/JSON')
+def restaurantsJSON():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
+    restaurants = session.query(Restaurant).all()
+    return jsonify(restaurants=[r.serialize for r in restaurants])
+
+
 @app.route('/user/all/')
 def showUsers():
     if not check_admin_access() and not check_user_access():

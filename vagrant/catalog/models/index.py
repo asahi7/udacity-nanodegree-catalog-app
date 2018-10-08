@@ -54,6 +54,15 @@ class Restaurant(Base):
     def __repr__(self):
         return '<Restaurant %r>' % (self.name)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'city_id': self.city_id
+        }
+
 
 class Complaint(Base):
     __tablename__ = 'complaint'
