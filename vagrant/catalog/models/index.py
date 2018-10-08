@@ -13,10 +13,22 @@ class City(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
     country = Column(String(120), nullable=False)
-    restaurants = relationship('Restaurant', backref='city', passive_deletes=True, lazy=True)
+    restaurants = relationship(
+        'Restaurant',
+        backref='city',
+        passive_deletes=True,
+        lazy=True)
 
     def __repr__(self):
         return '<City %r at %r>' % (self.name, self.country)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'country': self.country,
+        }
 
 
 class Restaurant(Base):
@@ -25,8 +37,17 @@ class Restaurant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(120), nullable=False)
     description = Column(Text, nullable=False)
-    city_id = Column(Integer, ForeignKey('city.id', ondelete='CASCADE'), nullable=False)
-    complaints = relationship('Complaint', backref='restaurant', passive_deletes=True, lazy=True)
+    city_id = Column(
+        Integer,
+        ForeignKey(
+            'city.id',
+            ondelete='CASCADE'),
+        nullable=False)
+    complaints = relationship(
+        'Complaint',
+        backref='restaurant',
+        passive_deletes=True,
+        lazy=True)
     recommendations = relationship(
         'Recommendation', backref='restaurant', passive_deletes=True, lazy=True)
 

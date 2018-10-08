@@ -1,4 +1,4 @@
-from flask import Flask, request, session, redirect, flash, url_for, render_template, abort
+from flask import Flask, request, session, redirect, flash, url_for, render_template, abort, jsonify
 from models.index import City, Base, Restaurant, User, Complaint, Recommendation
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import asc, create_engine
@@ -229,6 +229,14 @@ def showCities():
         return redirect(url_for("showSignIn"))
     cities = session.query(City).order_by(asc(City.name))
     return render_template('cities.html', cities=cities)
+
+
+@app.route('/city/all/JSON')
+def citiesJSON():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
+    cities = session.query(City).all()
+    return jsonify(cities=[c.serialize for c in cities])
 
 
 @app.route("/city/<int:city_id>/restaurant/new/", methods=["GET", "POST"])
