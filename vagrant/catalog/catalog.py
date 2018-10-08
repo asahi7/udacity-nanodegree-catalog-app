@@ -436,6 +436,20 @@ def showComments(restaurant_id):
         'comments.html', comments=comments, restaurant=restaurant)
 
 
+@app.route('/restaurant/comment/all/JSON')
+def commentsForRestaurantJSON():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
+    complaints = session.query(Complaint).join(
+        User).join(Restaurant).filter(Restaurant.id == Complaint.restaurant_id).filter(
+        User.id == Complaint.posted_by).all()
+    recommendations = session.query(Recommendation).join(
+        User).join(Restaurant).filter(Restaurant.id == Recommendation.restaurant_id).filter(
+        User.id == Recommendation.posted_by).all()
+    return jsonify(complaints=[c.serialize for c in complaints], recommendations=[
+                   r.serialize for r in recommendations])
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

@@ -84,6 +84,18 @@ class Complaint(Base):
     def __repr__(self):
         return '<Complaints %r with rate %d>' % (self.name, self.rate)
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'restaurant_id': self.restaurant_id,
+            'rate': self.rate,
+            'posted_date': self.posted_date,
+            'posted_by': self.posted_by
+        }
+
 
 class Recommendation(Base):
     __tablename__ = 'recommendation'
@@ -103,6 +115,17 @@ class Recommendation(Base):
 
     def __repr__(self):
         return '<Recommendation %r>' % (self.name)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'restaurant_id': self.restaurant_id,
+            'posted_date': self.posted_date,
+            'posted_by': self.posted_by
+        }
 
 
 class User(Base):
