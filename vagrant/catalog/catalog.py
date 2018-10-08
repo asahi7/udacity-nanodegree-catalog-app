@@ -175,6 +175,7 @@ def gdisconnect():
         del login_session['user_id']
         return redirect(url_for('showSignIn'))
     else:
+        del login_session['access_token']
         response = make_response(
             json.dumps(
                 'Failed to revoke token for given user.',
