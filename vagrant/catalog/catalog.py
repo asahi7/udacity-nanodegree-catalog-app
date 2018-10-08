@@ -194,6 +194,20 @@ def newCity():
         return render_template('newCity.html')
 
 
+@app.route("/city/<int:city_id>/change/", methods=["POST", "GET"])
+def changeCity(city_id):
+    if not check_admin_access():
+        return redirect(url_for('showSignIn'))
+    city = session.query(City).get(city_id)
+    if request.method == "POST":
+        city.name = request.form["city"]
+        city.country = request.form["country"]
+        session.commit()
+        return redirect(url_for('showCities'))
+    else:
+        return render_template('changeCity.html', city=city)
+
+
 @app.route('/city/all/')
 def showCities():
     if not check_admin_access() and not check_user_access():
@@ -218,6 +232,23 @@ def newRestaurant(city_id):
     else:
         city = session.query(City).get(city_id)
         return render_template('newRestaurant.html', city=city)
+
+
+@app.route("/city/<int:city_id>/restaurant/<int:restaurant_id>/change/", methods=["POST", "GET"])
+def changeRestaurant(city_id, restaurant_id):
+    if not check_admin_access():
+        return redirect(url_for('showSignIn'))
+    restaurant = session.query(Restaurant).get(restaurant_id)
+    city = session.query(City).get(city_id)
+    if request.method == "POST":
+        restaurant.name = request.form["name"]
+        print request.form["description"]
+        restaurant.description = request.form["description"]
+        print restaurant.description
+        session.commit()
+        return redirect(url_for('showRestaurants', city_id=city_id))
+    else:
+        return render_template('changeRestaurant.html', city=city, restaurant=restaurant)
 
 
 @app.route('/city/<int:city_id>/restaurant/all/')

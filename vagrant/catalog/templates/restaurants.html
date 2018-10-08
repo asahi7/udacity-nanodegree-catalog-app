@@ -12,6 +12,9 @@
 	{% for restaurant in restaurants %}
 		<li class="list-group-item">
 			View comments in <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a>
+			{% if city != None %}
+				|| <a href="{{url_for('changeRestaurant', city_id=city.id, restaurant_id=restaurant.id)}}">Change</a>
+			{% endif %}
 		</li>
 	{% endfor %}
 </ul>

@@ -8,7 +8,8 @@
     {% for city in cities %}
     <li class="list-group-item">
         View restaurants in <a
-            href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a>
+            href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a> ||
+        <a href="{{url_for('changeCity', city_id=city.id)}}">Change</a>
     </li>
     {% endfor %}
 </ul>
