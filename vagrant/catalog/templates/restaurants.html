@@ -2,7 +2,9 @@
 {% block content %}
 {% if city != None and city.id != 0 %}
 <h2>Restaurants in a city - {{city.name}}</h2>
-	<a href="{{url_for('newRestaurant', city_id=city.id)}}">Add a restaurant</a>
+	{% if 'admin' in session and session['admin'] == True %}
+		<a href="{{url_for('newRestaurant', city_id=city.id)}}">Add a restaurant</a>
+	{% endif %}
 {% elif city == None %}
 	<h2>All restaurants</h2>
 {% endif %}

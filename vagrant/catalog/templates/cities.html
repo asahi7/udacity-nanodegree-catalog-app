@@ -1,12 +1,15 @@
 {% extends "main.html" %}
 {% block content %}
 <h2>All cities</h2>
+{% if 'admin' in session and session['admin'] == True %}
 <a href="{{url_for('newCity')}}">Add a city</a>
+{% endif %}
 <ul class="list-group list-group-flush">
-	{% for city in cities %}
-		<li class="list-group-item">
-			View restaurants in <a href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a>
-		</li>
-	{% endfor %}
+    {% for city in cities %}
+    <li class="list-group-item">
+        View restaurants in <a
+            href="{{url_for('showRestaurants', city_id=city.id)}}">{{city.name}}</a>
+    </li>
+    {% endfor %}
 </ul>
 {% endblock %}

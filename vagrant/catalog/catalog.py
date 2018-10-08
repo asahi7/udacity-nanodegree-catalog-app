@@ -24,6 +24,18 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Restaurant Menu Application"
 
 
+def check_admin_access():
+    if 'admin' in login_session and login_session['admin'] == True:
+        return True
+    return False
+
+
+def check_user_access():
+    if 'admin' in login_session and login_session['admin'] == False:
+        return True
+    return False
+
+
 @app.route("/")
 def showSignIn():
     return render_template("signin.html")
@@ -125,6 +137,8 @@ def gconnect():
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     access_token = login_session.get('access_token')
     if access_token is None:
         print 'Access Token is None'
@@ -158,6 +172,8 @@ def gdisconnect():
 
 @app.route("/city/new/", methods=["GET", "POST"])
 def newCity():
+    if not check_admin_access():
+        return redirect(url_for('showSignIn'))
     if request.method == "POST":
         city = City(name=request.form["city"], country=request.form["country"])
         session.add(city)
@@ -170,12 +186,16 @@ def newCity():
 
 @app.route('/city/all/')
 def showCities():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     cities = session.query(City).order_by(asc(City.name))
     return render_template('cities.html', cities=cities)
 
 
 @app.route("/city/<int:city_id>/restaurant/new/", methods=["GET", "POST"])
 def newRestaurant(city_id):
+    if not check_admin_access():
+        return redirect(url_for("showSignIn"))
     if request.method == "POST":
         restaurant = Restaurant(name=request.form["name"], description=request.form["description"],
                                 city_id=city_id)
@@ -192,6 +212,8 @@ def newRestaurant(city_id):
 
 @app.route('/city/<int:city_id>/restaurant/all/')
 def showRestaurants(city_id):
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     city = session.query(City).get(city_id)
     if city_id == 0:
         restaurants = session.query(Restaurant).all()
@@ -202,6 +224,7 @@ def showRestaurants(city_id):
         'restaurants.html', restaurants=restaurants, city=city)
 
 
+# TODO: delete this, deprecated
 @app.route("/user/new/", methods=["GET", "POST"])
 def newUser():
     if request.method == "POST":
@@ -220,12 +243,16 @@ def newUser():
 
 @app.route('/user/all/')
 def showUsers():
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     users = session.query(User)
     return render_template('users.html', users=users)
 
 
 @app.route('/user/<int:user_id>/')
 def showUser(user_id):
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     user = session.query(User).get(user_id)
     return render_template('user.html', user=user)
 
@@ -233,6 +260,8 @@ def showUser(user_id):
 @app.route("/restaurant/<int:restaurant_id>/comment/new/",
            methods=["GET", "POST"])
 def newComment(restaurant_id):
+    if not check_user_access():
+        return redirect(url_for("showSignIn"))
     if request.method == "POST":
         if request.form["type"] == "complaint":
             complaint = Complaint(name=request.form["name"],
@@ -266,6 +295,8 @@ def newComment(restaurant_id):
 
 @app.route('/restaurant/<int:restaurant_id>/comment/all/')
 def showComments(restaurant_id):
+    if not check_admin_access() and not check_user_access():
+        return redirect(url_for("showSignIn"))
     restaurant = session.query(Restaurant).get(restaurant_id)
     if restaurant_id == 0:
         complaints = session.query(Complaint).join(
