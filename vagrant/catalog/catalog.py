@@ -224,23 +224,6 @@ def showRestaurants(city_id):
         'restaurants.html', restaurants=restaurants, city=city)
 
 
-# TODO: delete this, deprecated
-@app.route("/user/new/", methods=["GET", "POST"])
-def newUser():
-    if request.method == "POST":
-        is_admin = True if request.form["is_admin"] == "true" else False
-        user = User(
-            name=request.form["name"],
-            email=request.form["email"],
-            is_admin=is_admin)
-        session.add(user)
-        flash('New user `%s` was created' % user.name)
-        session.commit()
-        return redirect(url_for('showUsers'))
-    else:
-        return render_template('newUser.html')
-
-
 @app.route('/user/all/')
 def showUsers():
     if not check_admin_access() and not check_user_access():
