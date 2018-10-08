@@ -67,16 +67,21 @@ def getUserData(credentials):
 
 
 def saveUserToDB(data, as_admin):
-    login_session['username'] = data['name'] if 'name' in data else ''
-    login_session['email'] = data['email']
-    login_session['admin'] = as_admin
-    if session.query(User).filter_by(email=data['email']).first() is None:
+    username = data['name'] if 'name' in data else ''
+    user = session.query(User).filter_by(email=data['email']).first()
+    if user is None:
         user = User(
-            name=login_session['username'],
+            name=username,
             email=data['email'],
-            is_admin=login_session['admin'])
+            is_admin=as_admin)
         session.add(user)
         flash('New user `%s` was created' % user.name)
+    elif user.is_admin != as_admin:
+        raise ValueError('User has not a role with which he is trying to log in')
+    login_session['username'] = username
+    login_session['user_id'] = user.id
+    login_session['email'] = data['email']
+    login_session['admin'] = as_admin
 
 
 @app.route('/gconnect/', methods=['POST'])
@@ -119,12 +124,17 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     data = getUserData(credentials)
-    print request.args.get('as_admin')
     if request.args.get('as_admin') == 'True':
         as_admin = True
     else:
         as_admin = False
-    saveUserToDB(data, as_admin)
+    try:
+        saveUserToDB(data, as_admin)
+    except ValueError as error:
+        response = make_response(
+            json.dumps(error.message), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
     if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
@@ -251,7 +261,7 @@ def newComment(restaurant_id):
                                   description=request.form["description"],
                                   rate=int(request.form["rate"]),
                                   restaurant_id=restaurant_id,
-                                  posted_by=2  # TODO: change when auth is added
+                                  posted_by=login_session['user_id']
                                   )
             session.add(complaint)
             flash(
@@ -261,7 +271,7 @@ def newComment(restaurant_id):
             recommendation = Recommendation(name=request.form["name"],
                                             description=request.form["description"],
                                             restaurant_id=restaurant_id,
-                                            posted_by=2  # TODO: change when auth is added
+                                            posted_by=login_session['user_id']
                                             )
             session.add(recommendation)
             flash(

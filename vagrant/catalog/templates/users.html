@@ -4,7 +4,7 @@
 <ul class="list-group list-group-flush">
 	{% for user in users %}
 		<li class="list-group-item">
-			{{user.name}} - id: {{user.id}} - {{"Admin" if user.is_admin == True}}
+			{{user.name}} - id: {{user.id}} - {{"Admin" if user.is_admin == True else "User"}}
 		</li>
 	{% endfor %}
 </ul>
