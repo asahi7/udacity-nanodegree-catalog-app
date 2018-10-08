@@ -14,10 +14,9 @@ Currently, there is only one admistrator who can manage the app in order to not 
 * After previous command finishes executing, run: `vagrant ssh`, this will open a SSH connection to your virtual machine
 * Inside VM, change your directory to: `cd /vagrant/`, this is the working directory of our project, as you would be able to see
 * You will also have to create a new PostgreSQL database with help of `psql`. Run: `psql`, then `create database catalogdb`
+* With SSH, in /vagrant/catalog/, run: `python init_db.py`, this will initialize tables in the database
 
 ## Launch the website
-
-With SSH, in /vagrant/catalog/, run: `python init_db.py`, this will initialize tables in the database
 
 In /vagrant/catalog/, run: `python catalog.py`
 
