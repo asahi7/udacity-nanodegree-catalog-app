@@ -77,7 +77,8 @@ def saveUserToDB(data, as_admin):
         session.add(user)
         flash('New user `%s` was created' % user.name)
     elif user.is_admin != as_admin:
-        raise ValueError('User has not a role with which he is trying to log in')
+        raise ValueError(
+            'User has not a role with which he is trying to log in')
     login_session['username'] = username
     login_session['user_id'] = user.id
     login_session['email'] = data['email']
@@ -234,7 +235,8 @@ def newRestaurant(city_id):
         return render_template('newRestaurant.html', city=city)
 
 
-@app.route("/city/<int:city_id>/restaurant/<int:restaurant_id>/change/", methods=["POST", "GET"])
+@app.route("/city/<int:city_id>/restaurant/<int:restaurant_id>/change/",
+           methods=["POST", "GET"])
 def changeRestaurant(city_id, restaurant_id):
     if not check_admin_access():
         return redirect(url_for('showSignIn'))
@@ -248,7 +250,8 @@ def changeRestaurant(city_id, restaurant_id):
         session.commit()
         return redirect(url_for('showRestaurants', city_id=city_id))
     else:
-        return render_template('changeRestaurant.html', city=city, restaurant=restaurant)
+        return render_template('changeRestaurant.html',
+                               city=city, restaurant=restaurant)
 
 
 @app.route('/city/<int:city_id>/restaurant/all/')
@@ -324,13 +327,13 @@ def showComments(restaurant_id):
     restaurant = session.query(Restaurant).get(restaurant_id)
     if restaurant_id == 0:
         complaints = session.query(Complaint).join(
-            User).filter(User.id == Complaint.posted_by).all()
+            User).join(Restaurant).filter(Restaurant.id == Complaint.restaurant_id).filter(User.id == Complaint.posted_by).all()
         recommendations = session.query(Recommendation).join(
-            User).filter(User.id == Recommendation.posted_by).all()
+            User).join(Restaurant).filter(Restaurant.id == Recommendation.restaurant_id).filter(User.id == Recommendation.posted_by).all()
     else:
-        complaints = session.query(Complaint).join(User).filter(User.id == Complaint.posted_by).filter(
+        complaints = session.query(Complaint).join(User).join(Restaurant).filter(Restaurant.id == Complaint.restaurant_id).filter(User.id == Complaint.posted_by).filter(
             Complaint.restaurant_id == restaurant_id).all()
-        recommendations = session.query(Recommendation).join(User).filter(User.id == Recommendation.posted_by).filter(
+        recommendations = session.query(Recommendation).join(User).join(Restaurant).filter(Restaurant.id == Recommendation.restaurant_id).filter(User.id == Recommendation.posted_by).filter(
             Recommendation.restaurant_id == restaurant_id).all()
     comments = {
         "complaints": complaints,

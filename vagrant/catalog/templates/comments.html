@@ -12,7 +12,7 @@
 {% for complaint in comments['complaints'] %}
     <div class="card" style="width: 18rem;">
       <div class="card-body">
-        <h5 class="card-title">{{complaint.name}}</h5>
+        <h5 class="card-title">{{complaint.name}} for <a href="{{url_for('showComments', restaurant_id=complaint.restaurant.id)}}">{{complaint.restaurant.name}}</a></h5>
         <h6 class="card-subtitle mb-2 text-muted">Stars: {{complaint.rate}}</h6>
         <p class="card-text">{{complaint.description}}</p>
         <a href="{{url_for('showUser', user_id=complaint.user.id)}}" class="card-link">by {{complaint.user.name}}</a>
@@ -23,7 +23,7 @@
 {% for recommendation in comments['recommendations'] %}
     <div class="card" style="width: 18rem;">
       <div class="card-body">
-        <h5 class="card-title">{{recommendation.name}}</h5>
+        <h5 class="card-title">{{recommendation.name}} for <a href="{{url_for('showComments', restaurant_id=recommendation.restaurant.id)}}">{{recommendation.restaurant.name}}</a></h5>
         <p class="card-text">{{recommendation.description}}</p>
         <a href="{{url_for('showUser', user_id=recommendation.user.id)}}" class="card-link">by {{recommendation.user.name}}</a>
       </div>
