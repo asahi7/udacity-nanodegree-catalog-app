@@ -267,6 +267,18 @@ def changeRestaurant(city_id, restaurant_id):
                                city=city, restaurant=restaurant)
 
 
+@app.route(
+    "/city/<int:city_id>/restaurant/<int:restaurant_id>/delete/", methods=["GET"])
+def deleteRestaurant(city_id, restaurant_id):
+    if not check_admin_access():
+        return redirect(url_for('showSignIn'))
+    restaurant = session.query(Restaurant).get(restaurant_id)
+    if restaurant is not None:
+        session.delete(restaurant)
+        session.commit()
+    return redirect(url_for('showRestaurants', city_id=city_id))
+
+
 @app.route('/city/<int:city_id>/restaurant/all/')
 def showRestaurants(city_id):
     if not check_admin_access() and not check_user_access():

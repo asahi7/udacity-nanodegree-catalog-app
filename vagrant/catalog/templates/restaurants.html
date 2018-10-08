@@ -16,7 +16,10 @@
 			<h6 class="card-subtitle mb-2 text-muted">View comments in <a href="{{url_for('showComments', restaurant_id=restaurant.id)}}">{{restaurant.name}}</a></h6>
 			<p class="card-text">{{restaurant.description}}</p>
 			{% if city != None %}
-				<a href="{{url_for('changeRestaurant', city_id=city.id, restaurant_id=restaurant.id)}}">Change</a>
+			  {% if 'admin' in session and session['admin'] == True %}
+            		|| <a href="{{url_for('changeRestaurant', city_id=city.id, restaurant_id=restaurant.id)}}">Change</a>
+            		|| <a href="{{url_for('deleteRestaurant', city_id=city.id, restaurant_id=restaurant.id)}}">Delete</a>
+			  {% endif %}
 			{% endif %}
 		  </div>
 		</div>
